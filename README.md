@@ -57,6 +57,14 @@
 |:---:|:---:|:---:|
 | ![Payment](screenshoot/payment.png) | ![Analytics](screenshoot/analytics.png) | ![Settings](screenshoot/settings.png) |
 
+| Rooms | Guests | Reports |
+|:---:|:---:|:---:|
+| ![Rooms](screenshoot/rooms.png) | ![Guests](screenshoot/guests.png) | ![Reports](screenshoot/reports.png) |
+
+| Backup |
+|:---:|
+| ![Backup](screenshoot/backup.png) |
+
 </div>
 
 ## Instalasi
