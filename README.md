@@ -51,19 +51,19 @@
 
 | Home | Booking | Calendar |
 |:---:|:---:|:---:|
-| ![Home](screenshoot/home.png) | ![Booking](screenshoot/booking.png) | ![Calendar](screenshoot/calendar.png) |
+| ![Analytics](screenshoot/home.png) | ![Payment](screenshoot/booking.png) | ![Booking](screenshoot/calendar.png) |
 
 | Payment | Analytics | Settings |
 |:---:|:---:|:---:|
-| ![Payment](screenshoot/payment.png) | ![Analytics](screenshoot/analytics.png) | ![Settings](screenshoot/settings.png) |
+| ![Reports](screenshoot/payment.png) | ![Guests](screenshoot/analytics.png) | ![Settings](screenshoot/settings.png) |
 
 | Rooms | Guests | Reports |
 |:---:|:---:|:---:|
-| ![Rooms](screenshoot/rooms.png) | ![Guests](screenshoot/guests.png) | ![Reports](screenshoot/reports.png) |
+| ![Rooms](screenshoot/rooms.png) | ![Home](screenshoot/guests.png) | ![Reports](screenshoot/reports.png) |
 
-| Backup |
+| Home |
 |:---:|
-| ![Backup](screenshoot/backup.png) |
+| ![Home](screenshoot/backup.png) |
 
 </div>
 
