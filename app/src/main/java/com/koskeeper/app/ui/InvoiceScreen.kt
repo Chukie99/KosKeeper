@@ -88,7 +88,7 @@ fun InvoiceScreen(
                         InvoiceRow("Tanggal", SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date()))
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        HorizontalDivider()
+                        Divider()
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InvoiceRow("Tamu", b.namaLengkap)
@@ -98,7 +98,7 @@ fun InvoiceScreen(
                         InvoiceRow("Malam", "${hitungMalam(b.tanggalCheckin, b.tanggalCheckout)}")
 
                         Spacer(modifier = Modifier.height(8.dp))
-                        HorizontalDivider()
+                        Divider()
                         Spacer(modifier = Modifier.height(8.dp))
 
                         InvoiceRow("Total Bayar", "Rp ${String.format("%,.0f", b.totalBayar)}")

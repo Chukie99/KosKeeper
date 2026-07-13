@@ -266,7 +266,7 @@ fun OccupancyChart(
 
             // Progress bar
             LinearProgressIndicator(
-                progress = { occupancyRate / 100f },
+                progress = occupancyRate / 100f,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(12.dp)

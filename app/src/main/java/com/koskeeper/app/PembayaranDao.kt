@@ -23,22 +23,22 @@ data class PembayaranLengkap(
 interface PembayaranDao {
     @Query("""
         SELECT p.id, p.bookingId, p.jumlah, p.tanggal, p.metode, p.catatan, p.status,
-               t.nama as namaTamu, k.nomor as nomorKamar
+               t.namaLengkap as namaTamu, k.nomorKamar as nomorKamar
         FROM pembayaran p
         INNER JOIN booking b ON p.bookingId = b.id
-        INNER JOIN tamu t ON b.tamuId = t.id
-        INNER JOIN kamar k ON b.kamarId = k.id
+        INNER JOIN tamu t ON b.idTamu = t.id
+        INNER JOIN kamar k ON b.idKamar = k.id
         ORDER BY p.tanggal DESC
     """)
     fun getAllLengkap(): Flow<List<PembayaranLengkap>>
 
     @Query("""
         SELECT p.id, p.bookingId, p.jumlah, p.tanggal, p.metode, p.catatan, p.status,
-               t.nama as namaTamu, k.nomor as nomorKamar
+               t.namaLengkap as namaTamu, k.nomorKamar as nomorKamar
         FROM pembayaran p
         INNER JOIN booking b ON p.bookingId = b.id
-        INNER JOIN tamu t ON b.tamuId = t.id
-        INNER JOIN kamar k ON b.kamarId = k.id
+        INNER JOIN tamu t ON b.idTamu = t.id
+        INNER JOIN kamar k ON b.idKamar = k.id
         WHERE p.bookingId = :bookingId
         ORDER BY p.tanggal DESC
     """)
