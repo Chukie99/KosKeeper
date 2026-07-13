@@ -49,7 +49,7 @@
 
 <div align="center">
 
-| Home | Payment | Booking |
+| Analytics | Payment | Booking |
 |:---:|:---:|:---:|
 | ![Analytics](screenshoot/home.png) | ![Payment](screenshoot/booking.png) | ![Booking](screenshoot/calendar.png) |
 
