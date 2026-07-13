@@ -10,6 +10,14 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![API](https://img.shields.io/badge/API-26%2B-brightgreen.svg)](https://developer.android.com/about/versions/oreo)
 
+---
+
+**Suka dengan project ini? Dukung pengembangannya!**
+
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20Me-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/chukie99)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/chukie99)
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-181717?logo=github)](https://github.com/sponsors/Chukie99)
+
 </div>
 
 ---
@@ -83,6 +91,7 @@ app/src/main/java/com/koskeeper/app/
 ├── Booking.kt               # Entity booking
 ├── Tamu.kt                  # Entity tamu
 ├── HariLibur.kt             # Entity hari libur
+├── Pembayaran.kt            # Entity pembayaran
 ├── *Dao.kt                  # Data Access Objects
 ├── NotificationHelper.kt    # Notifikasi
 ├── CheckoutReminderWorker.kt # Background reminder
@@ -95,6 +104,8 @@ app/src/main/java/com/koskeeper/app/
     ├── TamuScreen.kt        # Manajemen tamu
     ├── KalenderScreen.kt    # Tampilan kalender
     ├── LaporanScreen.kt     # Laporan & statistik
+    ├── PembayaranScreen.kt  # Pembayaran
+    ├── AnalyticsScreen.kt   # Dashboard analytics
     ├── HariLiburScreen.kt   # Pengaturan hari libur
     ├── BackupScreen.kt      # Backup & restore
     └── Theme.kt             # Tema aplikasi
@@ -113,6 +124,18 @@ Kontribusi sangat diterima! Silakan buka issue atau submit pull request.
 ## License
 
 Project ini dilisensikan di bawah [MIT License](LICENSE).
+
+## Dukungan
+
+Project ini gratis dan open source. Jika kamu merasa terbantu, dukung pengembangannya:
+
+| Platform | Link |
+|----------|------|
+| **Ko-fi** | [ko-fi.com/chukie99](https://ko-fi.com/chukie99) |
+| **Buy Me A Coffee** | [buymeacoffee.com/chukie99](https://buymeacoffee.com/chukie99) |
+| **GitHub Sponsors** | [github.com/sponsors/Chukie99](https://github.com/sponsors/Chukie99) |
+
+Donasi seikhlasnya sangat membantu pengembangan fitur baru!
 
 ## Kontak
 
