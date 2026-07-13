@@ -84,6 +84,14 @@ class MainActivity : ComponentActivity() {
                         viewModel = viewModel,
                         onBack = { currentScreen = "home" }
                     )
+                    "pembayaran" -> PembayaranScreen(
+                        viewModel = viewModel,
+                        onBack = { currentScreen = "home" }
+                    )
+                    "analytics" -> AnalyticsScreen(
+                        viewModel = viewModel,
+                        onBack = { currentScreen = "home" }
+                    )
                     else -> {
                         if (currentScreen.startsWith("booking_detail_")) {
                             val id = currentScreen.removePrefix("booking_detail_").toLongOrNull() ?: 0L

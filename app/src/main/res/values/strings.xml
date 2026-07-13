@@ -1,4 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">KosKeeper</string>
+
+    <!-- Navigation -->
+    <string name="home">Beranda</string>
+    <string name="back">Kembali</string>
+    <string name="save">Simpan</string>
+    <string name="cancel">Batal</string>
+    <string name="delete">Hapus</string>
+    <string name="edit">Edit</string>
+    <string name="add">Tambah</string>
+    <string name="close">Tutup</string>
+    <string name="ok">OK</string>
+
+    <!-- Home Screen -->
+    <string name="greeting">Assalamu\'alaikum</string>
+    <string name="subtitle">KosKeeper Booking System</string>
+    <string name="menu_main">Menu Utama</string>
+    <string name="settings">Pengaturan</string>
+    <string name="dark_mode">Dark Mode</string>
+
+    <!-- Stats -->
+    <string name="total_rooms">Homestay</string>
+    <string name="active_bookings">Booking</string>
+    <string name="active_income">Pendapatan Aktif</string>
+
+    <!-- Menu Items -->
+    <string name="manage_rooms">Kelola Homestay</string>
+    <string name="new_booking">Form Booking</string>
+    <string name="manage_guests">Kelola Tamu</string>
+    <string name="calendar">Kalender</string>
+    <string name="booking_list">Daftar Booking</string>
+    <string name="payments">Pembayaran</string>
+    <string name="reports">Laporan</string>
+    <string name="holidays">Hari Libur</string>
+    <string name="backup_data">Backup Data</string>
+
+    <!-- Room Screen -->
+    <string name="room_management">Manajemen Kamar</string>
+    <string name="add_room">Tambah Kamar</string>
+    <string name="room_number">Nomor Kamar</string>
+    <string name="room_type">Tipe Kamar</string>
+    <string name="price_per_night">Harga per Malam</string>
+    <string name="weekend_price">Harga Weekend</string>
+    <string name="standard">Standar</string>
+    <string name="vip">VIP</string>
+    <string name="suite">Suite</string>
+
+    <!-- Guest Screen -->
+    <string name="guest_management">Manajemen Tamu</string>
+    <string name="add_guest">Tambah Tamu</string>
+    <string name="full_name">Nama Lengkap</string>
+    <string name="contact_number">Nomor Kontak</string>
+
+    <!-- Booking Screen -->
+    <string name="new_booking_form">Form Booking Baru</string>
+    <string name="select_room">Pilih Kamar</string>
+    <string name="select_guest">Pilih Tamu</string>
+    <string name="checkin_date">Tanggal Check-in</string>
+    <string name="checkin_time">Jam Check-in</string>
+    <string name="checkout_date">Tanggal Checkout</string>
+    <string name="checkout_time">Jam Checkout</string>
+    <string name="available">Tersedia</string>
+    <string name="occupied">Terisi</string>
+    <string name="total_payment">Total Bayar</string>
+
+    <!-- Payment Screen -->
+    <string name="payment_history">Riwayat Pembayaran</string>
+    <string name="add_payment">Tambah Pembayaran</string>
+    <string name="amount">Jumlah</string>
+    <string name="payment_method">Metode Pembayaran</string>
+    <string name="cash">Tunai</string>
+    <string name="transfer">Transfer</string>
+    <string name="qris">QRIS</string>
+    <string name="other">Lainnya</string>
+    <string name="notes">Catatan</string>
+    <string name="paid">Lunas</string>
+    <string name="pending">Pending</string>
+
+    <!-- Report Screen -->
+    <string name="reports_title">Laporan</string>
+    <string name="monthly_report">Laporan Bulanan</string>
+    <string name="export_csv">Export CSV</string>
+    <string name="from_date">Dari Tanggal</string>
+    <string name="to_date">Sampai Tanggal</string>
+
+    <!-- Holiday Screen -->
+    <string name="holiday_management">Manajemen Hari Libur</string>
+    <string name="add_holiday">Tambah Hari Libur</string>
+    <string name="holiday_name">Nama Hari Libur</string>
+    <string name="start_date">Tanggal Mulai</string>
+    <string name="end_date">Tanggal Selesai</string>
+    <string name="holiday_price">Harga Libur</string>
+
+    <!-- Backup Screen -->
+    <string name="backup_restore">Backup &amp; Restore</string>
+    <string name="backup_now">Backup Sekarang</string>
+    <string name="restore_database">Restore Database</string>
+    <string name="select_backup_file">Pilih File Backup</string>
+    <string name="processing">Memproses…</string>
+
+    <!-- Status -->
+    <string name="active">Aktif</string>
+    <string name="completed">Selesai</string>
+    <string name="cancelled">Dibatalkan</string>
+
+    <!-- Messages -->
+    <string name="success">Berhasil</string>
+    <string name="error">Gagal</string>
+    <string name="confirm_delete">Yakin hapus?</string>
+    <string name="no_data">Belum ada data</string>
 </resources>

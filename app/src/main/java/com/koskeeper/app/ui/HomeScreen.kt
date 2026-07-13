@@ -12,9 +12,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.koskeeper.app.PondokViewModel
+import com.koskeeper.app.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +33,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("KosKeeper") },
+                title = { Text(stringResource(R.string.app_name)) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -48,14 +50,14 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                "Assalamu'alaikum",
+                stringResource(R.string.greeting),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
             Text(
-                "KosKeeper Booking System",
+                stringResource(R.string.subtitle),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
@@ -67,8 +69,8 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                StatCard("Homestay", "$totalKamar", Icons.Default.KingBed, Modifier.weight(1f))
-                StatCard("Booking", "$bookingAktif", Icons.Default.CalendarMonth, Modifier.weight(1f))
+                StatCard(stringResource(R.string.total_rooms), "$totalKamar", Icons.Default.KingBed, Modifier.weight(1f))
+                StatCard(stringResource(R.string.active_bookings), "$bookingAktif", Icons.Default.CalendarMonth, Modifier.weight(1f))
             }
             StatCard(
                 "Pendapatan Aktif",
@@ -78,32 +80,39 @@ fun HomeScreen(
             )
 
             Divider()
-            Text("Menu Utama", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
+            Text(stringResource(R.string.menu_main), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                MenuCard("Kelola Homestay", Icons.Default.KingBed, { onNavigate("kamar") }, Modifier.weight(1f))
-                MenuCard("Form Booking", Icons.Default.CalendarMonth, { onNavigate("booking") }, Modifier.weight(1f))
+                MenuCard(stringResource(R.string.manage_rooms), Icons.Default.KingBed, { onNavigate("kamar") }, Modifier.weight(1f))
+                MenuCard(stringResource(R.string.new_booking), Icons.Default.CalendarMonth, { onNavigate("booking") }, Modifier.weight(1f))
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                MenuCard("Kelola Tamu", Icons.Default.People, { onNavigate("tamu") }, Modifier.weight(1f))
-                MenuCard("Kalender", Icons.Default.DateRange, { onNavigate("kalender") }, Modifier.weight(1f))
+                MenuCard(stringResource(R.string.manage_guests), Icons.Default.People, { onNavigate("tamu") }, Modifier.weight(1f))
+                MenuCard(stringResource(R.string.calendar), Icons.Default.DateRange, { onNavigate("kalender") }, Modifier.weight(1f))
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                MenuCard("Daftar Booking", Icons.Default.List, { onNavigate("daftar_booking") }, Modifier.weight(1f))
-                MenuCard("Laporan", Icons.Default.BarChart, { onNavigate("laporan") }, Modifier.weight(1f))
+                MenuCard(stringResource(R.string.booking_list), Icons.Default.List, { onNavigate("daftar_booking") }, Modifier.weight(1f))
+                MenuCard(stringResource(R.string.payments), Icons.Default.Payment, { onNavigate("pembayaran") }, Modifier.weight(1f))
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                MenuCard(stringResource(R.string.reports), Icons.Default.BarChart, { onNavigate("laporan") }, Modifier.weight(1f))
+                MenuCard("Analytics", Icons.Default.Analytics, { onNavigate("analytics") }, Modifier.weight(1f))
             }
 
             Divider()
-            Text("Pengaturan", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
+            Text(stringResource(R.string.settings), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -117,7 +126,7 @@ fun HomeScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Default.DarkMode, null, tint = MaterialTheme.colorScheme.primary)
                         Spacer(Modifier.width(12.dp))
-                        Text("Dark Mode", style = MaterialTheme.typography.bodyLarge)
+                        Text(stringResource(R.string.dark_mode), style = MaterialTheme.typography.bodyLarge)
                     }
                     Switch(checked = isDarkMode, onCheckedChange = { onToggleDarkMode(it) })
                 }
@@ -127,8 +136,8 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                MenuCard("Hari Libur", Icons.Default.EventBusy, { onNavigate("hari_libur") }, Modifier.weight(1f))
-                MenuCard("Backup Data", Icons.Default.Backup, { onNavigate("backup") }, Modifier.weight(1f))
+                MenuCard(stringResource(R.string.holidays), Icons.Default.EventBusy, { onNavigate("hari_libur") }, Modifier.weight(1f))
+                MenuCard(stringResource(R.string.backup_data), Icons.Default.Backup, { onNavigate("backup") }, Modifier.weight(1f))
             }
         }
     }

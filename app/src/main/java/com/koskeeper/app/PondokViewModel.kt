@@ -3,6 +3,7 @@ package com.koskeeper.app
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,7 @@ class PondokViewModel(application: Application) : AndroidViewModel(application) 
     private val tamuDao = db.tamuDao()
     private val bookingDao = db.bookingDao()
     private val hariLiburDao = db.hariLiburDao()
+    private val pembayaranDao = db.pembayaranDao()
 
     val semuaKamar: StateFlow<List<Kamar>> = kamarDao.getAll()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -276,5 +278,53 @@ class PondokViewModel(application: Application) : AndroidViewModel(application) 
 
     suspend fun cekKamarTersedia(idKamar: Long, tanggal: String): Boolean {
         return bookingDao.isKamarAvailable(idKamar, tanggal)
+    }
+
+    // Pembayaran
+    val semuaPembayaran: StateFlow<List<PembayaranLengkap>> = pembayaranDao.getAllLengkap()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val totalLunas: StateFlow<Double> = pembayaranDao.getTotalLunas()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+
+    val totalPending: StateFlow<Double> = pembayaranDao.getTotalPending()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+
+    fun tambahPembayaran(
+        bookingId: Long, jumlah: Double, tanggal: String,
+        metode: String, catatan: String, onResult: (Boolean, String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                pembayaranDao.insert(
+                    Pembayaran(
+                        bookingId = bookingId, jumlah = jumlah,
+                        tanggal = tanggal, metode = metode, catatan = catatan
+                    )
+                )
+                onResult(true, "Pembayaran berhasil dicatat")
+            } catch (e: Exception) {
+                onResult(false, "Gagal mencatat pembayaran")
+            }
+        }
+    }
+
+    fun updateStatusPembayaran(pembayaran: Pembayaran, status: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                pembayaranDao.update(pembayaran.copy(status = status))
+                onResult(true, "Status pembayaran diupdate")
+            } catch (e: Exception) {
+                onResult(false, "Gagal update status")
+            }
+        }
+    }
+
+    fun hapusPembayaran(pembayaran: Pembayaran) {
+        viewModelScope.launch { pembayaranDao.delete(pembayaran) }
+    }
+
+    fun getPembayaranByBooking(bookingId: Long): Flow<List<PembayaranLengkap>> {
+        return pembayaranDao.getByBookingId(bookingId)
     }
 }
