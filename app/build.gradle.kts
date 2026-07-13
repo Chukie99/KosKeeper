@@ -16,9 +16,19 @@ android {
         versionName = "2.1"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("../koskeeper-release.key")
+            storePassword = "koskeeper123"
+            keyAlias = "koskeeper"
+            keyPassword = "koskeeper123"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
