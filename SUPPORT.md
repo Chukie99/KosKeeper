@@ -13,8 +13,8 @@ Donasi seikhlasnya sangat membantu untuk:
 
 | Platform | Link | Keterangan |
 |----------|------|------------|
-| **Ko-fi** | [ko-fi.com/chukie99](https://ko-fi.com/chukie99) | Donasi instan, tanpa akun |
-| **Buy Me A Coffee** | [buymeacoffee.com/chukie99](https://buymeacoffee.com/chukie99) | Donasi $5 per "kopi" |
+| **Ko-fi** | [ko-fi.com/chuckie999](https://ko-fi.com/chuckie999) | Donasi instan, tanpa akun |
+| **Buy Me A Coffee** | [buymeacoffee.com/chuckie999](https://buymeacoffee.com/chuckie999) | Donasi $5 per "kopi" |
 | **GitHub Sponsors** | [github.com/sponsors/Chukie99](https://github.com/sponsors/Chukie99) | Sponsorship bulanan atau sekali |
 
 ## Sponsorship
@@ -45,6 +45,6 @@ Terima kasih sudah mendukung open source! Setiap donasi, sekecil apapun, sangat 
 
 <div align="center">
 
-[Dukung Sekarang](https://ko-fi.com/chukie99) 🎉
+[Dukung Sekarang](https://ko-fi.com/chuckie999) 🎉
 
 </div>
