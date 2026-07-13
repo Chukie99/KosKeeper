@@ -49,7 +49,13 @@
 
 <div align="center">
 
-> Screenshots akan segera ditambahkan
+| Home | Booking | Calendar |
+|:---:|:---:|:---:|
+| ![Home](screenshoot/home.png) | ![Booking](screenshoot/booking.png) | ![Calendar](screenshoot/calendar.png) |
+
+| Payment | Analytics | Settings |
+|:---:|:---:|:---:|
+| ![Payment](screenshoot/payment.png) | ![Analytics](screenshoot/analytics.png) | ![Settings](screenshoot/settings.png) |
 
 </div>
 
