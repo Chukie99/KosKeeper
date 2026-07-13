@@ -110,4 +110,23 @@
     <string name="error">Gagal</string>
     <string name="confirm_delete">Yakin hapus?</string>
     <string name="no_data">Belum ada data</string>
+
+    <!-- Search -->
+    <string name="search">Cari</string>
+    <string name="search_hint">Cari booking, tamu, atau kamar...</string>
+
+    <!-- Settings -->
+    <string name="security">Keamanan</string>
+    <string name="app_lock">App Lock (PIN)</string>
+    <string name="pin_default">PIN default: 1234</string>
+
+    <!-- About -->
+    <string name="about">Tentang</string>
+    <string name="version">Versi 2.1</string>
+    <string name="open_source">Open Source</string>
+
+    <!-- Invoice -->
+    <string name="invoice">Invoice</string>
+    <string name="download_invoice">Download Invoice PDF</string>
+    <string name="invoice_success">Invoice PDF berhasil disimpan</string>
 </resources>

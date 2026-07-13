@@ -22,7 +22,8 @@ fun BookingDetailScreen(
     viewModel: PondokViewModel,
     bookingId: Long,
     onBack: () -> Unit,
-    onRiwayatTamu: (String) -> Unit
+    onRiwayatTamu: (String) -> Unit,
+    onInvoice: (Long) -> Unit = {}
 ) {
     var booking by remember { mutableStateOf<BookingLengkap?>(null) }
     val scope = rememberCoroutineScope()
@@ -177,6 +178,18 @@ fun BookingDetailScreen(
                                 fontWeight = FontWeight.Bold
                             )
                         }
+                    }
+                }
+
+                // Invoice Button
+                item {
+                    Button(
+                        onClick = { onInvoice(b.id) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.PictureAsPdf, null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Download Invoice PDF")
                     }
                 }
             }

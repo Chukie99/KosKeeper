@@ -34,80 +34,115 @@ class MainActivity : ComponentActivity() {
 
         val prefs = getSharedPreferences("koskeeper", Context.MODE_PRIVATE)
         var isDarkMode = prefs.getBoolean("dark_mode", false)
+        val appLockEnabled = prefs.getBoolean("app_lock_enabled", false)
 
         setContent {
             var darkMode by remember { mutableStateOf(isDarkMode) }
+            var showSplash by remember { mutableStateOf(true) }
+            var isUnlocked by remember { mutableStateOf(!appLockEnabled) }
+            var currentScreen by remember { mutableStateOf("home") }
 
             KosKeeperTheme(isDarkTheme = darkMode) {
-                var currentScreen by remember { mutableStateOf("home") }
-
-                when (currentScreen) {
-                    "home" -> HomeScreen(
-                        viewModel = viewModel,
-                        onNavigate = { currentScreen = it },
-                        isDarkMode = darkMode,
-                        onToggleDarkMode = {
-                            darkMode = it
-                            prefs.edit().putBoolean("dark_mode", it).apply()
-                        }
-                    )
-                    "kamar" -> KamarScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" }
-                    )
-                    "tamu" -> TamuScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" }
-                    )
-                    "booking" -> BookingScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" }
-                    )
-                    "kalender" -> KalenderScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" }
-                    )
-                    "daftar_booking" -> DaftarBookingScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" },
-                        onDetail = { id -> currentScreen = "booking_detail_$id" }
-                    )
-                    "laporan" -> LaporanScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" }
-                    )
-                    "backup" -> BackupScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" }
-                    )
-                    "hari_libur" -> HariLiburScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" }
-                    )
-                    "pembayaran" -> PembayaranScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" }
-                    )
-                    "analytics" -> AnalyticsScreen(
-                        viewModel = viewModel,
-                        onBack = { currentScreen = "home" }
-                    )
+                when {
+                    showSplash -> {
+                        SplashScreen(onFinish = { showSplash = false })
+                    }
+                    !isUnlocked -> {
+                        AppLockScreen(onUnlock = { isUnlocked = true })
+                    }
                     else -> {
-                        if (currentScreen.startsWith("booking_detail_")) {
-                            val id = currentScreen.removePrefix("booking_detail_").toLongOrNull() ?: 0L
-                            BookingDetailScreen(
+                        when (currentScreen) {
+                            "home" -> HomeScreen(
                                 viewModel = viewModel,
-                                bookingId = id,
-                                onBack = { currentScreen = "daftar_booking" },
-                                onRiwayatTamu = { nama -> currentScreen = "riwayat_tamu_$nama" }
+                                onNavigate = { currentScreen = it },
+                                isDarkMode = darkMode,
+                                onToggleDarkMode = {
+                                    darkMode = it
+                                    prefs.edit().putBoolean("dark_mode", it).apply()
+                                }
                             )
-                        } else if (currentScreen.startsWith("riwayat_tamu_")) {
-                            val nama = currentScreen.removePrefix("riwayat_tamu_")
-                            RiwayatTamuScreen(
+                            "kamar" -> KamarScreen(
                                 viewModel = viewModel,
-                                namaTamu = nama,
                                 onBack = { currentScreen = "home" }
                             )
+                            "tamu" -> TamuScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" }
+                            )
+                            "booking" -> BookingScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" }
+                            )
+                            "kalender" -> KalenderScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" }
+                            )
+                            "daftar_booking" -> DaftarBookingScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" },
+                                onDetail = { id -> currentScreen = "booking_detail_$id" }
+                            )
+                            "laporan" -> LaporanScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" }
+                            )
+                            "backup" -> BackupScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" }
+                            )
+                            "hari_libur" -> HariLiburScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" }
+                            )
+                            "pembayaran" -> PembayaranScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" }
+                            )
+                            "analytics" -> AnalyticsScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" }
+                            )
+                            "search" -> SearchScreen(
+                                viewModel = viewModel,
+                                onBack = { currentScreen = "home" },
+                                onBookingClick = { id -> currentScreen = "booking_detail_$id" }
+                            )
+                            "about" -> AboutScreen(
+                                onBack = { currentScreen = "home" }
+                            )
+                            "settings" -> SettingsScreen(
+                                prefs = prefs,
+                                onBack = { currentScreen = "home" },
+                                onAppLockToggle = { enabled ->
+                                    prefs.edit().putBoolean("app_lock_enabled", enabled).apply()
+                                }
+                            )
+                            else -> {
+                                if (currentScreen.startsWith("booking_detail_")) {
+                                    val id = currentScreen.removePrefix("booking_detail_").toLongOrNull() ?: 0L
+                                    BookingDetailScreen(
+                                        viewModel = viewModel,
+                                        bookingId = id,
+                                        onBack = { currentScreen = "daftar_booking" },
+                                        onRiwayatTamu = { nama -> currentScreen = "riwayat_tamu_$nama" },
+                                        onInvoice = { bid -> currentScreen = "invoice_$bid" }
+                                    )
+                                } else if (currentScreen.startsWith("riwayat_tamu_")) {
+                                    val nama = currentScreen.removePrefix("riwayat_tamu_")
+                                    RiwayatTamuScreen(
+                                        viewModel = viewModel,
+                                        namaTamu = nama,
+                                        onBack = { currentScreen = "home" }
+                                    )
+                                } else if (currentScreen.startsWith("invoice_")) {
+                                    val id = currentScreen.removePrefix("invoice_").toLongOrNull() ?: 0L
+                                    InvoiceScreen(
+                                        viewModel = viewModel,
+                                        bookingId = id,
+                                        onBack = { currentScreen = "daftar_booking" }
+                                    )
+                                }
+                            }
                         }
                     }
                 }

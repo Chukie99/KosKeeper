@@ -139,6 +139,14 @@ fun HomeScreen(
                 MenuCard(stringResource(R.string.holidays), Icons.Default.EventBusy, { onNavigate("hari_libur") }, Modifier.weight(1f))
                 MenuCard(stringResource(R.string.backup_data), Icons.Default.Backup, { onNavigate("backup") }, Modifier.weight(1f))
             }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                MenuCard("Cari", Icons.Default.Search, { onNavigate("search") }, Modifier.weight(1f))
+                MenuCard("Tentang", Icons.Default.Info, { onNavigate("about") }, Modifier.weight(1f))
+            }
         }
     }
 }

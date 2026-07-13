@@ -110,4 +110,23 @@
     <string name="error">Error</string>
     <string name="confirm_delete">Are you sure you want to delete?</string>
     <string name="no_data">No data yet</string>
+
+    <!-- Search -->
+    <string name="search">Search</string>
+    <string name="search_hint">Search bookings, guests, or rooms...</string>
+
+    <!-- Settings -->
+    <string name="security">Security</string>
+    <string name="app_lock">App Lock (PIN)</string>
+    <string name="pin_default">Default PIN: 1234</string>
+
+    <!-- About -->
+    <string name="about">About</string>
+    <string name="version">Version 2.1</string>
+    <string name="open_source">Open Source</string>
+
+    <!-- Invoice -->
+    <string name="invoice">Invoice</string>
+    <string name="download_invoice">Download Invoice PDF</string>
+    <string name="invoice_success">Invoice PDF saved successfully</string>
 </resources>
