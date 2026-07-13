@@ -49,19 +49,19 @@
 
 <div align="center">
 
-| Home | Booking | Calendar |
+| Home | Payment | Booking |
 |:---:|:---:|:---:|
 | ![Analytics](screenshoot/home.png) | ![Payment](screenshoot/booking.png) | ![Booking](screenshoot/calendar.png) |
 
-| Payment | Analytics | Settings |
+| Report | Guest | Calendar |
 |:---:|:---:|:---:|
 | ![Reports](screenshoot/payment.png) | ![Guests](screenshoot/analytics.png) | ![Settings](screenshoot/settings.png) |
 
-| Rooms | Guests | Reports |
+| Setting | Home | Rooms |
 |:---:|:---:|:---:|
 | ![Rooms](screenshoot/rooms.png) | ![Home](screenshoot/guests.png) | ![Reports](screenshoot/reports.png) |
 
-| Home |
+| Load |
 |:---:|
 | ![Home](screenshoot/backup.png) |
 
