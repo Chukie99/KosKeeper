@@ -31,7 +31,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Pondok Sakinah") },
+                title = { Text("KosKeeper") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -55,7 +55,7 @@ fun HomeScreen(
                 textAlign = TextAlign.Center
             )
             Text(
-                "Pondok Sakinah Booking System",
+                "KosKeeper Booking System",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
