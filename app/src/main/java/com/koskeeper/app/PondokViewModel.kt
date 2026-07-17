@@ -1,4 +1,4 @@
-package com.koskeeper.app
+﻿package com.koskeeper.app
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -188,6 +188,8 @@ class PondokViewModel(application: Application) : AndroidViewModel(application) 
         idKamar: Long, idTamu: Long,
         checkin: String, jamIn: String,
         checkout: String, jamOut: String,
+        hargaKhusus: Double? = null,
+        catatanHarga: String = "",
         onResult: (Boolean, String) -> Unit
     ) {
         viewModelScope.launch {
@@ -207,17 +209,26 @@ class PondokViewModel(application: Application) : AndroidViewModel(application) 
                 return@launch
             }
 
-            val total = hitungTotalBayar(kamar, checkin, checkout)
+            val hargaStandar = hitungTotalBayar(kamar, checkin, checkout)
+            val totalBayar = hargaKhusus ?: hargaStandar
 
             bookingDao.insert(
                 Booking(
                     idKamar = idKamar, idTamu = idTamu,
                     tanggalCheckin = checkin, jamCheckin = jamIn,
                     tanggalCheckout = checkout, jamCheckout = jamOut,
-                    totalBayar = total
+                    totalBayar = totalBayar,
+                    hargaStandar = hargaStandar,
+                    catatanHarga = catatanHarga
                 )
             )
-            onResult(true, "Booking berhasil! Total: Rp ${String.format("%,.0f", total)}")
+
+            val msg = if (hargaKhusus != null) {
+                "Booking berhasil! Harga Khusus: Rp ${String.format("%,.0f", hargaKhusus)} (Standar: Rp ${String.format("%,.0f", hargaStandar)})"
+            } else {
+                "Booking berhasil! Total: Rp ${String.format("%,.0f", totalBayar)}"
+            }
+            onResult(true, msg)
         }
     }
 
@@ -253,6 +264,7 @@ class PondokViewModel(application: Application) : AndroidViewModel(application) 
                 return@launch
             }
 
+            val existingBooking = bookingDao.getByIdLengkap(bookingId)
             val total = hitungTotalBayar(kamar, checkin, checkout)
 
             bookingDao.update(
@@ -261,7 +273,10 @@ class PondokViewModel(application: Application) : AndroidViewModel(application) 
                     idKamar = idKamar, idTamu = idTamu,
                     tanggalCheckin = checkin, jamCheckin = jamIn,
                     tanggalCheckout = checkout, jamCheckout = jamOut,
-                    totalBayar = total, status = "aktif"
+                    totalBayar = existingBooking?.let { if (it.hargaStandar != it.totalBayar) it.totalBayar else total } ?: total,
+                    hargaStandar = total,
+                    catatanHarga = existingBooking?.catatanHarga ?: "",
+                    status = "aktif"
                 )
             )
             onResult(true, "Booking berhasil diupdate! Total: Rp ${String.format("%,.0f", total)}")
@@ -290,16 +305,25 @@ class PondokViewModel(application: Application) : AndroidViewModel(application) 
     val totalPending: StateFlow<Double> = pembayaranDao.getTotalPending()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 
+    suspend fun hitungSisaBayar(bookingId: Long): Double {
+        val booking = bookingDao.getByIdLengkap(bookingId) ?: return 0.0
+        val sudahDibayar = pembayaranDao.getTotalDibayarByBooking(bookingId)
+        return booking.totalBayar - sudahDibayar
+    }
+
     fun tambahPembayaran(
         bookingId: Long, jumlah: Double, tanggal: String,
-        metode: String, catatan: String, onResult: (Boolean, String) -> Unit
+        metode: String, catatan: String,
+        tipeBayar: String = "pelunasan", kodeQris: String = "",
+        onResult: (Boolean, String) -> Unit
     ) {
         viewModelScope.launch {
             try {
                 pembayaranDao.insert(
                     Pembayaran(
                         bookingId = bookingId, jumlah = jumlah,
-                        tanggal = tanggal, metode = metode, catatan = catatan
+                        tanggal = tanggal, metode = metode, catatan = catatan,
+                        tipeBayar = tipeBayar, kodeQris = kodeQris
                     )
                 )
                 onResult(true, "Pembayaran berhasil dicatat")

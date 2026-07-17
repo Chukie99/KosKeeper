@@ -13,6 +13,8 @@ data class BookingLengkap(
     val tanggalCheckout: String,
     val jamCheckout: String,
     val totalBayar: Double,
+    val hargaStandar: Double,
+    val catatanHarga: String,
     val status: String,
     val nomorKamar: String,
     val tipeKamar: String,
@@ -33,6 +35,8 @@ data class BookingDetailLaporan(
     val tanggalCheckout: String,
     val jamCheckout: String,
     val totalBayar: Double,
+    val hargaStandar: Double,
+    val catatanHarga: String,
     val status: String,
     val namaLengkap: String,
     val nomorKamar: String,
@@ -52,7 +56,7 @@ interface BookingDao {
 
     @Query("""
         SELECT b.id, b.tanggalCheckin, b.jamCheckin, b.tanggalCheckout, b.jamCheckout,
-               b.totalBayar, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
+               b.totalBayar, b.hargaStandar, b.catatanHarga, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
         FROM booking b
         JOIN kamar k ON b.idKamar = k.id
         JOIN tamu t ON b.idTamu = t.id
@@ -62,7 +66,7 @@ interface BookingDao {
 
     @Query("""
         SELECT b.id, b.tanggalCheckin, b.jamCheckin, b.tanggalCheckout, b.jamCheckout,
-               b.totalBayar, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
+               b.totalBayar, b.hargaStandar, b.catatanHarga, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
         FROM booking b
         JOIN kamar k ON b.idKamar = k.id
         JOIN tamu t ON b.idTamu = t.id
@@ -73,7 +77,7 @@ interface BookingDao {
 
     @Query("""
         SELECT b.id, b.tanggalCheckin, b.jamCheckin, b.tanggalCheckout, b.jamCheckout,
-               b.totalBayar, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
+               b.totalBayar, b.hargaStandar, b.catatanHarga, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
         FROM booking b
         JOIN kamar k ON b.idKamar = k.id
         JOIN tamu t ON b.idTamu = t.id
@@ -108,7 +112,7 @@ interface BookingDao {
 
     @Query("""
         SELECT b.id, b.tanggalCheckin, b.jamCheckin, b.tanggalCheckout, b.jamCheckout,
-               b.totalBayar, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
+               b.totalBayar, b.hargaStandar, b.catatanHarga, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
         FROM booking b
         JOIN kamar k ON b.idKamar = k.id
         JOIN tamu t ON b.idTamu = t.id
@@ -145,7 +149,7 @@ interface BookingDao {
 
     @Query("""
         SELECT b.id, b.tanggalCheckin, b.jamCheckin, b.tanggalCheckout, b.jamCheckout,
-               b.totalBayar, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
+               b.totalBayar, b.hargaStandar, b.catatanHarga, b.status, k.nomorKamar, k.tipeKamar, t.namaLengkap, t.nomorKontak
         FROM booking b
         JOIN kamar k ON b.idKamar = k.id
         JOIN tamu t ON b.idTamu = t.id
@@ -158,7 +162,7 @@ interface BookingDao {
 
     @Query("""
         SELECT b.id, b.tanggalCheckin, b.jamCheckin, b.tanggalCheckout, b.jamCheckout,
-               b.totalBayar, b.status, t.namaLengkap, k.nomorKamar, k.tipeKamar
+               b.totalBayar, b.hargaStandar, b.catatanHarga, b.status, t.namaLengkap, k.nomorKamar, k.tipeKamar
         FROM booking b
         JOIN kamar k ON b.idKamar = k.id
         JOIN tamu t ON b.idTamu = t.id

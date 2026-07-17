@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.koskeeper.app.PondokViewModel
@@ -38,6 +39,9 @@ fun BookingScreen(
     var dialogMsg by remember { mutableStateOf<String?>(null) }
     var showCheckinPicker by remember { mutableStateOf(false) }
     var showCheckoutPicker by remember { mutableStateOf(false) }
+    var useCustomPrice by remember { mutableStateOf(false) }
+    var customPrice by remember { mutableStateOf("") }
+    var catatanHarga by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -184,8 +188,52 @@ fun BookingScreen(
                                 if (weekend > 0) Text("Weekend: $weekend malam x Rp ${String.format("%,.0f", selectedKamar.hargaWeekend)}", style = MaterialTheme.typography.bodySmall)
                                 if (libur > 0) Text("Libur: $libur malam (harga khusus)", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
                                 Spacer(Modifier.height(4.dp))
-                                Text("Total: Rp ${String.format("%,.0f", total)}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                                Text("Harga Standar: Rp ${String.format("%,.0f", total)}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
                             }
+                        }
+                    }
+
+                    // Custom Price Section
+                    if (priceInfo != null) {
+                        Spacer(Modifier.height(8.dp))
+                        Divider()
+                        Spacer(Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Gunakan Harga Khusus", style = MaterialTheme.typography.titleSmall)
+                            Spacer(Modifier.weight(1f))
+                            Switch(
+                                checked = useCustomPrice,
+                                onCheckedChange = {
+                                    useCustomPrice = it
+                                    if (!it) {
+                                        customPrice = ""
+                                        catatanHarga = ""
+                                    }
+                                }
+                            )
+                        }
+                        if (useCustomPrice) {
+                            Spacer(Modifier.height(8.dp))
+                            OutlinedTextField(
+                                value = customPrice,
+                                onValueChange = { customPrice = it },
+                                label = { Text("Harga Khusus (Rp)") },
+                                modifier = Modifier.fillMaxWidth(),
+                                leadingIcon = { Icon(Icons.Default.AttachMoney, null) },
+                                placeholder = { Text("Contoh: 150000") }
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            OutlinedTextField(
+                                value = catatanHarga,
+                                onValueChange = { catatanHarga = it },
+                                label = { Text("Catatan (misal: nego, promo, diskon)") },
+                                modifier = Modifier.fillMaxWidth(),
+                                leadingIcon = { Icon(Icons.Default.Notes, null) },
+                                placeholder = { Text("Contoh: Nego dengan tamu") }
+                            )
                         }
                     }
                 }
@@ -204,12 +252,19 @@ fun BookingScreen(
                         } catch (e: Exception) { dialogMsg = "Format tanggal salah! Gunakan YYYY-MM-DD"; return@Button }
 
                         val doBooking = { tamuId: Long ->
-                            viewModel.tambahBooking(selectedKamarId!!, tamuId, checkin, jamIn, checkout, jamOut) { ok, msg ->
+                            val finalCustomPrice = if (useCustomPrice) customPrice.toDoubleOrNull() else null
+                            viewModel.tambahBooking(selectedKamarId!!, tamuId, checkin, jamIn, checkout, jamOut, finalCustomPrice, catatanHarga) { ok, msg ->
                                 dialogMsg = msg
-                                if (ok) { selectedKamarId = null; selectedTamuId = null; nama = ""; kontak = ""; checkin = ""; checkout = ""; jamIn = "14:00"; jamOut = "12:00" }
+                                if (ok) { selectedKamarId = null; selectedTamuId = null; nama = ""; kontak = ""; checkin = ""; checkout = ""; jamIn = "14:00"; jamOut = "12:00"; useCustomPrice = false; customPrice = ""; catatanHarga = "" }
                             }
                         }
 
+                        if (useCustomPrice && customPrice.isBlank()) {
+                            dialogMsg = "Harga khusus harus diisi!"; return@Button
+                        }
+                        if (useCustomPrice && customPrice.toDoubleOrNull() == null) {
+                            dialogMsg = "Harga khusus harus berupa angka!"; return@Button
+                        }
                         if (selectedTamuId != null) {
                             doBooking(selectedTamuId!!)
                         } else {

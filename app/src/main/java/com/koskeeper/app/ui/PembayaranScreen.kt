@@ -1,4 +1,4 @@
-package com.koskeeper.app.ui
+﻿package com.koskeeper.app.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.koskeeper.app.PembayaranLengkap
 import com.koskeeper.app.PondokViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -140,6 +141,11 @@ fun PembayaranCard(pembayaran: PembayaranLengkap) {
         else -> Color(0xFFF44336)
     }
 
+    val tipeColor = when (pembayaran.tipeBayar) {
+        "dp" -> Color(0xFF2196F3)
+        else -> Color(0xFF4CAF50)
+    }
+
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -155,11 +161,25 @@ fun PembayaranCard(pembayaran: PembayaranLengkap) {
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    pembayaran.namaTamu,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Medium
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        pembayaran.namaTamu,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Surface(
+                        color = tipeColor.copy(alpha = 0.1f),
+                        shape = MaterialTheme.shapes.small
+                    ) {
+                        Text(
+                            pembayaran.tipeBayar.uppercase(),
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = tipeColor
+                        )
+                    }
+                }
                 Text(
                     "Kamar ${pembayaran.nomorKamar} • ${pembayaran.metode}",
                     style = MaterialTheme.typography.bodySmall,
@@ -170,6 +190,13 @@ fun PembayaranCard(pembayaran: PembayaranLengkap) {
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                if (pembayaran.metode == "QRIS" && pembayaran.kodeQris.isNotBlank()) {
+                    Text(
+                        "QRIS: ${pembayaran.kodeQris}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
@@ -204,9 +231,21 @@ fun AddPembayaranDialog(
     var jumlah by remember { mutableStateOf("") }
     var metode by remember { mutableStateOf("Tunai") }
     var catatan by remember { mutableStateOf("") }
+    var tipeBayar by remember { mutableStateOf("pelunasan") }
+    var kodeQris by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+    var sisaBayar by remember { mutableStateOf(0.0) }
+    val scope = rememberCoroutineScope()
 
     val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+    val selectedBookingData = bookingList.find { it.id == selectedBooking }
+
+    // Hitung sisa bayar saat booking dipilih
+    LaunchedEffect(selectedBooking) {
+        selectedBooking?.let {
+            sisaBayar = viewModel.hitungSisaBayar(it)
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -219,7 +258,7 @@ fun AddPembayaranDialog(
                     onExpandedChange = { expanded = !expanded }
                 ) {
                     OutlinedTextField(
-                        value = bookingList.find { it.id == selectedBooking }?.let {
+                        value = selectedBookingData?.let {
                             "#${it.id} - ${it.namaLengkap}"
                         } ?: "",
                         onValueChange = {},
@@ -240,11 +279,58 @@ fun AddPembayaranDialog(
                                 onClick = {
                                     selectedBooking = booking.id
                                     jumlah = booking.totalBayar.toString()
+                                    tipeBayar = "pelunasan"
                                     expanded = false
                                 }
                             )
                         }
                     }
+                }
+
+                // Info sisa bayar
+                if (selectedBooking != null && sisaBayar > 0) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                "Sisa Bayar: Rp ${String.format("%,.0f", sisaBayar)}",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            selectedBookingData?.let {
+                                Text(
+                                    "Total Booking: Rp ${String.format("%,.0f", it.totalBayar)}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Tipe pembayaran
+                Text("Tipe Pembayaran", style = MaterialTheme.typography.titleSmall)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FilterChip(
+                        selected = tipeBayar == "dp",
+                        onClick = {
+                            tipeBayar = "dp"
+                            selectedBookingData?.let {
+                                jumlah = (it.totalBayar * 0.5).toLong().toString()
+                            }
+                        },
+                        label = { Text("DP (50%)") }
+                    )
+                    FilterChip(
+                        selected = tipeBayar == "pelunasan",
+                        onClick = {
+                            tipeBayar = "pelunasan"
+                            jumlah = sisaBayar.toLong().toString()
+                        },
+                        label = { Text("Pelunasan") }
+                    )
                 }
 
                 OutlinedTextField(
@@ -255,6 +341,7 @@ fun AddPembayaranDialog(
                 )
 
                 // Metode pembayaran
+                Text("Metode Pembayaran", style = MaterialTheme.typography.titleSmall)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf("Tunai", "Transfer", "QRIS", "Lainnya").forEach { method ->
                         FilterChip(
@@ -263,6 +350,18 @@ fun AddPembayaranDialog(
                             label = { Text(method) }
                         )
                     }
+                }
+
+                // QRIS input
+                if (metode == "QRIS") {
+                    OutlinedTextField(
+                        value = kodeQris,
+                        onValueChange = { kodeQris = it },
+                        label = { Text("Kode/Link QRIS") },
+                        placeholder = { Text("Masukkan kode atau link QRIS") },
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = { Icon(Icons.Default.QrCode, null) }
+                    )
                 }
 
                 OutlinedTextField(
@@ -283,7 +382,9 @@ fun AddPembayaranDialog(
                                 jumlah = jml,
                                 tanggal = today,
                                 metode = metode,
-                                catatan = catatan
+                                catatan = catatan,
+                                tipeBayar = tipeBayar,
+                                kodeQris = if (metode == "QRIS") kodeQris else ""
                             ) { success, msg ->
                                 if (success) onDismiss()
                             }

@@ -20,5 +20,7 @@ data class Booking(
     val tanggalCheckout: String,
     val jamCheckout: String,
     val totalBayar: Double,
+    val hargaStandar: Double = totalBayar,
+    val catatanHarga: String = "",
     val status: String = "aktif"
 )

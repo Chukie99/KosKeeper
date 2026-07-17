@@ -1,4 +1,4 @@
-package com.koskeeper.app.ui
+﻿package com.koskeeper.app.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -331,6 +331,9 @@ fun DaftarBookingScreen(
                                 }
                             }
                             Text("Total: Rp ${String.format("%,.0f", b.totalBayar)}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                            if (b.hargaStandar != b.totalBayar) {
+                                Text("(Standar: Rp ${String.format("%,.0f", b.hargaStandar)})", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
 
                             if (isActive) {
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -605,3 +608,4 @@ fun EditBookingDialog(
         )
     }
 }
+

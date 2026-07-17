@@ -1,4 +1,4 @@
-package com.koskeeper.app
+﻿package com.koskeeper.app
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -15,6 +15,8 @@ data class PembayaranLengkap(
     val metode: String,
     val catatan: String,
     val status: String,
+    val tipeBayar: String,
+    val kodeQris: String,
     val namaTamu: String,
     val nomorKamar: String
 )
@@ -23,7 +25,7 @@ data class PembayaranLengkap(
 interface PembayaranDao {
     @Query("""
         SELECT p.id, p.bookingId, p.jumlah, p.tanggal, p.metode, p.catatan, p.status,
-               t.namaLengkap as namaTamu, k.nomorKamar as nomorKamar
+               p.tipeBayar, p.kodeQris, t.namaLengkap as namaTamu, k.nomorKamar as nomorKamar
         FROM pembayaran p
         INNER JOIN booking b ON p.bookingId = b.id
         INNER JOIN tamu t ON b.idTamu = t.id
@@ -34,7 +36,7 @@ interface PembayaranDao {
 
     @Query("""
         SELECT p.id, p.bookingId, p.jumlah, p.tanggal, p.metode, p.catatan, p.status,
-               t.namaLengkap as namaTamu, k.nomorKamar as nomorKamar
+               p.tipeBayar, p.kodeQris, t.namaLengkap as namaTamu, k.nomorKamar as nomorKamar
         FROM pembayaran p
         INNER JOIN booking b ON p.bookingId = b.id
         INNER JOIN tamu t ON b.idTamu = t.id
@@ -55,6 +57,9 @@ interface PembayaranDao {
         WHERE status = 'lunas' AND tanggal BETWEEN :dari AND :sampai
     """)
     fun getTotalLunasByTanggal(dari: String, sampai: String): Flow<Double>
+
+    @Query("SELECT COALESCE(SUM(jumlah), 0) FROM pembayaran WHERE bookingId = :bookingId AND status = 'lunas'")
+    suspend fun getTotalDibayarByBooking(bookingId: Long): Double
 
     @Insert
     suspend fun insert(pembayaran: Pembayaran): Long

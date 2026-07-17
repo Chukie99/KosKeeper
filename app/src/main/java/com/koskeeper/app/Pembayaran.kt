@@ -1,4 +1,4 @@
-package com.koskeeper.app
+﻿package com.koskeeper.app
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -22,5 +22,7 @@ data class Pembayaran(
     val tanggal: String,
     val metode: String,
     val catatan: String = "",
-    val status: String = "lunas"
+    val status: String = "lunas",
+    val tipeBayar: String = "pelunasan",
+    val kodeQris: String = ""
 )

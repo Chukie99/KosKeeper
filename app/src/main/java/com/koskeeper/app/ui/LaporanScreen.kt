@@ -145,7 +145,12 @@ fun LaporanScreen(
                             Text("${row.tanggalCheckin}\n${row.jamCheckin}", modifier = Modifier.weight(1.2f), style = MaterialTheme.typography.bodySmall)
                             Text(row.namaLengkap, modifier = Modifier.weight(1.3f), style = MaterialTheme.typography.bodySmall)
                             Text("${row.nomorKamar}\n${row.tipeKamar}", modifier = Modifier.weight(0.8f), style = MaterialTheme.typography.bodySmall)
-                            Text("Rp\n${String.format("%,.0f", row.totalBayar)}", modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("Rp\n${String.format("%,.0f", row.totalBayar)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                                if (row.hargaStandar != row.totalBayar) {
+                                    Text("(Std: ${String.format("%,.0f", row.hargaStandar)})", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                            }
                             Text(row.status.uppercase(), modifier = Modifier.weight(0.8f), style = MaterialTheme.typography.labelSmall, color = if (row.status == "aktif") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error)
                         }
                     }

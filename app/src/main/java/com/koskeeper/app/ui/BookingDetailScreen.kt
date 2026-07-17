@@ -1,4 +1,4 @@
-package com.koskeeper.app.ui
+﻿package com.koskeeper.app.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.koskeeper.app.BookingLengkap
+import com.koskeeper.app.PembayaranLengkap
 import com.koskeeper.app.PondokViewModel
 import kotlinx.coroutines.launch
 
@@ -26,10 +27,13 @@ fun BookingDetailScreen(
     onInvoice: (Long) -> Unit = {}
 ) {
     var booking by remember { mutableStateOf<BookingLengkap?>(null) }
+    val riwayatPembayaran by viewModel.getPembayaranByBooking(bookingId).collectAsState(initial = emptyList())
+    var sisaBayar by remember { mutableStateOf(0.0) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(bookingId) {
         booking = viewModel.getBookingById(bookingId)
+        sisaBayar = viewModel.hitungSisaBayar(bookingId)
     }
 
     Scaffold(
@@ -159,24 +163,184 @@ fun BookingDetailScreen(
                     }
                 }
 
-                // Total
+                // Total + Progress Pembayaran
                 item {
+                    val totalDibayar = riwayatPembayaran.filter { it.status == "lunas" }.sumOf { it.jumlah }
+                    val progress = if (b.totalBayar > 0) (totalDibayar / b.totalBayar).coerceIn(0.0, 1.0) else 0.0
+
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                     ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Total Bayar", style = MaterialTheme.typography.titleMedium)
-                            Text(
-                                "Rp ${String.format("%,.0f", b.totalBayar)}",
-                                style = MaterialTheme.typography.headlineSmall,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Bold
-                            )
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("Total Bayar", style = MaterialTheme.typography.titleMedium)
+                                Text(
+                                    "Rp ${String.format("%,.0f", b.totalBayar)}",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            // Tampilkan harga standar jika ada negosiasi
+                            if (b.hargaStandar != b.totalBayar) {
+                                Spacer(Modifier.height(8.dp))
+                                Divider()
+                                Spacer(Modifier.height(8.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Harga Standar:", style = MaterialTheme.typography.bodyMedium)
+                                    Text(
+                                        "Rp ${String.format("%,.0f", b.hargaStandar)}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                                Spacer(Modifier.height(4.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Selisih:", style = MaterialTheme.typography.bodyMedium)
+                                    Text(
+                                        "- Rp ${String.format("%,.0f", b.hargaStandar - b.totalBayar)}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = Color(0xFF2E7D32)
+                                    )
+                                }
+                                if (b.catatanHarga.isNotBlank()) {
+                                    Spacer(Modifier.height(4.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("Catatan:", style = MaterialTheme.typography.bodyMedium)
+                                        Text(
+                                            b.catatanHarga,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                }
+                            }
+
+                            // Progress Pembayaran
+                            if (riwayatPembayaran.isNotEmpty()) {
+                                Spacer(Modifier.height(12.dp))
+                                Divider()
+                                Spacer(Modifier.height(8.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Sudah Dibayar:", style = MaterialTheme.typography.bodyMedium)
+                                    Text(
+                                        "Rp ${String.format("%,.0f", totalDibayar)}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF2E7D32)
+                                    )
+                                }
+                                Spacer(Modifier.height(4.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Sisa Bayar:", style = MaterialTheme.typography.bodyMedium)
+                                    Text(
+                                        "Rp ${String.format("%,.0f", sisaBayar)}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (sisaBayar > 0) Color(0xFFFF9800) else Color(0xFF2E7D32)
+                                    )
+                                }
+                                Spacer(Modifier.height(8.dp))
+                                LinearProgressIndicator(
+                                    progress = progress.toFloat(),
+                                    modifier = Modifier.fillMaxWidth().height(8.dp),
+                                    color = if (progress >= 1.0) Color(0xFF4CAF50) else MaterialTheme.colorScheme.primary,
+                                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+                                )
+                                Spacer(Modifier.height(4.dp))
+                                Text(
+                                    "${String.format("%.0f", progress * 100)}%",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Riwayat Pembayaran
+                if (riwayatPembayaran.isNotEmpty()) {
+                    item {
+                        Text(
+                            "Riwayat Pembayaran",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    items(riwayatPembayaran) { bayar ->
+                        val tipeColor = when (bayar.tipeBayar) {
+                            "dp" -> Color(0xFF2196F3)
+                            else -> Color(0xFF4CAF50)
+                        }
+                        Card(modifier = Modifier.fillMaxWidth()) {
+                            Row(
+                                modifier = Modifier.padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    if (bayar.metode == "QRIS") Icons.Default.QrCode else Icons.Default.Payment,
+                                    null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(bayar.tanggal, style = MaterialTheme.typography.bodyMedium)
+                                        Spacer(Modifier.width(8.dp))
+                                        Surface(
+                                            color = tipeColor.copy(alpha = 0.1f),
+                                            shape = MaterialTheme.shapes.small
+                                        ) {
+                                            Text(
+                                                bayar.tipeBayar.uppercase(),
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = tipeColor
+                                            )
+                                        }
+                                    }
+                                    Text(
+                                        "${bayar.metode}${if (bayar.catatan.isNotBlank()) " - ${bayar.catatan}" else ""}",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    if (bayar.metode == "QRIS" && bayar.kodeQris.isNotBlank()) {
+                                        Text(
+                                            "QRIS: ${bayar.kodeQris}",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                }
+                                Text(
+                                    "Rp ${String.format("%,.0f", bayar.jumlah)}",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
                     }
                 }
@@ -271,3 +435,4 @@ fun RiwayatTamuScreen(
         }
     }
 }
+

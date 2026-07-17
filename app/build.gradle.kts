@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
@@ -12,8 +12,8 @@ android {
         applicationId = "com.koskeeper.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "2.1"
+        versionCode = 2
+        versionName = "2.2"
     }
 
     signingConfigs {
@@ -51,6 +51,17 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
+    }
+
+    applicationVariants.all {
+        val variant = this
+        outputs.all {
+            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            output.outputFileName = when {
+                variant.buildType.name == "release" -> "KosKeeper-v${variant.versionName}.apk"
+                else -> "KosKeeper-v${variant.versionName}-debug.apk"
+            }
+        }
     }
 }
 
