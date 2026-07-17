@@ -324,6 +324,14 @@ fun AddPembayaranDialog(
                         label = { Text("DP (50%)") }
                     )
                     FilterChip(
+                        selected = tipeBayar == "dp_custom",
+                        onClick = {
+                            tipeBayar = "dp_custom"
+                            jumlah = ""
+                        },
+                        label = { Text("DP Custom") }
+                    )
+                    FilterChip(
                         selected = tipeBayar == "pelunasan",
                         onClick = {
                             tipeBayar = "pelunasan"
@@ -333,13 +341,38 @@ fun AddPembayaranDialog(
                     )
                 }
 
+                // Preset persentase untuk DP Custom
+                if (tipeBayar == "dp_custom") {
+                    Text("Pilih Persentase:", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        listOf("25%" to 0.25, "50%" to 0.5, "75%" to 0.75, "100%" to 1.0).forEach { (label, percent) ->
+                            OutlinedButton(
+                                onClick = {
+                                    selectedBookingData?.let {
+                                        jumlah = (sisaBayar * percent).toLong().toString()
+                                    }
+                                },
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
+                            ) {
+                                Text(label, style = MaterialTheme.typography.labelSmall)
+                            }
+                        }
+                    }
+                }
+
                 OutlinedTextField(
                     value = jumlah,
                     onValueChange = { jumlah = it },
                     label = { Text("Jumlah (Rp)") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    supportingText = {
+                        if (selectedBookingData != null) {
+                            val jml = jumlah.toDoubleOrNull() ?: 0.0
+                            val persen = if (selectedBookingData!!.totalBayar > 0) (jml / selectedBookingData!!.totalBayar * 100) else 0.0
+                            Text("${String.format("%.1f", persen)}% dari total Rp ${String.format("%,.0f", selectedBookingData!!.totalBayar)}")
+                        }
+                    }
                 )
-
                 // Metode pembayaran
                 Text("Metode Pembayaran", style = MaterialTheme.typography.titleSmall)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -383,7 +416,7 @@ fun AddPembayaranDialog(
                                 tanggal = today,
                                 metode = metode,
                                 catatan = catatan,
-                                tipeBayar = tipeBayar,
+                                tipeBayar = if (tipeBayar == "dp_custom") "dp" else tipeBayar,
                                 kodeQris = if (metode == "QRIS") kodeQris else ""
                             ) { success, msg ->
                                 if (success) onDismiss()
@@ -403,3 +436,6 @@ fun AddPembayaranDialog(
         }
     )
 }
+
+
+
