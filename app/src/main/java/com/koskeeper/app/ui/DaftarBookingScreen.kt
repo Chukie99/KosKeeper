@@ -330,7 +330,20 @@ fun DaftarBookingScreen(
                                     }
                                 }
                             }
-                            Text("Total: Rp ${String.format("%,.0f", b.totalBayar)}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text("Total: Rp ${String.format("%,.0f", b.totalBayar)}", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                                Surface(
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                    shape = MaterialTheme.shapes.small
+                                ) {
+                                    Text(
+                                        b.status.uppercase(),
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
                             if (b.hargaStandar != b.totalBayar) {
                                 Text("(Standar: Rp ${String.format("%,.0f", b.hargaStandar)})", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
@@ -608,4 +621,5 @@ fun EditBookingDialog(
         )
     }
 }
+
 

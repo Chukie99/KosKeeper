@@ -318,7 +318,7 @@ fun AddPembayaranDialog(
                         onClick = {
                             tipeBayar = "dp"
                             selectedBookingData?.let {
-                                jumlah = (it.totalBayar * 0.5).toLong().toString()
+                                jumlah = (sisaBayar * 0.5).toLong().toString()
                             }
                         },
                         label = { Text("DP (50%)") }
@@ -436,6 +436,7 @@ fun AddPembayaranDialog(
         }
     )
 }
+
 
 
 
